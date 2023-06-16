@@ -44,7 +44,7 @@ void fillTValues(double *emptyTValArray, const float* range, int arraySize);
  * @param tValues Array of tValues.
  * @return Index of tVal.
  */
-int indexOfTVal(float tVal, const double *tValues);
+int indexOfTVal(float tVal, const double *tValues, int arraySize);
 
 /**
  * Split a function f(t) into components. Ex. 50*(t+6) -> {50,*,(,t,+,6,)}

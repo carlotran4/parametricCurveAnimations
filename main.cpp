@@ -102,8 +102,8 @@ int main(int, char**){
                 ImGui::BeginTooltip();
                 ImGui::TextUnformatted("Do not write your functions with implicit notations, such as 2t, or sin^2(t).\n"
                                        "t^2\n"
-                                       "x=(sin(t))^2\n"
-                                       "x=2*t+5");
+                                       "(sin(t))^2\n"
+                                       "2*t+5");
 
                 ImGui::EndTooltip();
             }
@@ -118,8 +118,8 @@ int main(int, char**){
                 ImGui::BeginTooltip();
                 ImGui::TextUnformatted("Do not write your functions with implicit notations, such as 2t, or sin^2(t).\n"
                                        "t^2\n"
-                                       "x=(sin(t))^2\n"
-                                       "x=2*t+5");
+                                       "(sin(t))^2\n"
+                                       "2*t+5");
                 ImGui::EndTooltip();
             }
 
@@ -149,12 +149,11 @@ int main(int, char**){
             static float t = range[0];
             static double xPoints[10000] , yPoints[10000], tValues[10000];
             static bool needToCalculate = true;
+            //TODO: analyze functions to find ways to reduce time complexity
             for(needToCalculate; needToCalculate; needToCalculate = false){
                 fillTValues(tValues, range, 10000);
                 generatePoints(xPoints, yPoints, tValues, yFun, xFun, 10000);
             }
-
-
 
             if(!paused) {
                 t += (range[1]-range[0])/450;
@@ -187,16 +186,19 @@ int main(int, char**){
                 needToCalculate = true;
                 t = range[0];
             }
-            ImGui::End();
 
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+            ImGui::End();
 
             ImGui::Begin("##GraphingWindow");
             ImGui::Text("Graph of: %s, %s", xFun, yFun);
-            int indexToGraphTo = indexOfTVal(t, tValues);
+            int indexToGraphTo = indexOfTVal(t, tValues, 10000);
             ImPlot::BeginPlot("##Graph", ImVec2(-1,-1),ImPlotFlags_Equal);
             ImPlot::SetupAxis(ImAxis_X1);
             ImPlot::SetupAxis(ImAxis_Y1);
 
+            //TODO: Change scale to be min, max x of x(t) and min, max y of y(t)
             //Workaround to manually set the scale of the plot. Otherwise, the scale starts out very small.
             static double xMin [1] = {-10.0}, yMin [1] = {-10}, xMax[1] = {10}, yMax[1] = {10};
             ImPlot::PlotLine("##minScale", xMin, yMin, 1 );
@@ -207,7 +209,7 @@ int main(int, char**){
             ImGui::End();
 
         }
-        
+
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);

@@ -17,7 +17,7 @@ bool isValidFunction(char* function){
 }
 
 //TODO: Implicit multiplication
-
+//TODO: Optimize for time
 void generatePoints(double *xArray, double *yArray, const double *tArray, const char *funY, const char *funX, int arraySize) {
     std::string funYString = funY; std::string funXString = funX;
     std::vector<std::string> xComponents; std::vector<std::string> yComponents;
@@ -33,6 +33,7 @@ void generatePoints(double *xArray, double *yArray, const double *tArray, const 
 }
 
 void fillTValues(double *emptyTValArray, const float* range, int arraySize) {
+    // O(n) time complexity
     double step = (range[1]-range[0])/(double)arraySize;
     double val = range[0];
     for(int i = 0; i<arraySize;++i){
@@ -41,12 +42,15 @@ void fillTValues(double *emptyTValArray, const float* range, int arraySize) {
     }
 }
 
-int indexOfTVal(float tVal, const double *tValues){
-    //TODO: Replace with binary search or find a way to make search unnecessary
-    for(int i = 0; i<30000; ++i){
-        if(tValues[i]<=tVal && tValues[i+1]>=tVal){
-            return i;
-        }
+int indexOfTVal(float tVal, const double *tValues, int arraySize) {
+    int left = 0;
+    int right = arraySize-1;
+    int middle;
+    while(left<=right){
+        middle = (left+right)/2;
+        if(tValues[middle]<=tVal && tValues[middle+1]>=tVal) return middle;
+        if(tValues[middle]<tVal && tValues[middle+1]<tVal) left = middle+1;
+        if(tValues[middle]>tVal) right = middle-1;
     }
     return -1;
 }
@@ -152,8 +156,10 @@ void toPostfix(std::vector<std::string>& components){
     components = out;
 }
 
+//TODO: It might be more efficient to figure out the function, and then apply to whole array, as opposed
+//      to finding for each of the 10k values.
 double getVal(std::vector<std::string> components, double tVal){
-    std::vector<double>stack;
+    std::vector<double> stack;
     for(std::string &s: components){
         if(s == "t") s=std::to_string(tVal);
     }
