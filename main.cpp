@@ -196,14 +196,18 @@ int main(int, char**){
             ImPlot::BeginPlot("##Graph", ImVec2(-1,-1),ImPlotFlags_Equal);
             ImPlot::SetupAxis(ImAxis_X1);
             ImPlot::SetupAxis(ImAxis_Y1);
+
+            //Workaround to manually set the scale of the plot. Otherwise, the scale starts out very small.
+            static double xMin [1] = {-10.0}, yMin [1] = {-10}, xMax[1] = {10}, yMax[1] = {10};
+            ImPlot::PlotLine("##minScale", xMin, yMin, 1 );
+            ImPlot::PlotLine("##maxScale", xMax, yMax, 1 );
+
             ImPlot::PlotLine("##plottedLine", xPoints, yPoints, indexToGraphTo);
             ImPlot::EndPlot();
             ImGui::End();
 
         }
-
-//TODO: figure out how to change scaling of the data
-
+        
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
