@@ -70,7 +70,7 @@ int main(int, char**){
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    io.Fonts->AddFontFromFileTTF("../segoeui.ttf", 25.0f);
+//    io.Fonts->AddFontFromFileTTF("../segoeui.ttf", 25.0f);
 
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
